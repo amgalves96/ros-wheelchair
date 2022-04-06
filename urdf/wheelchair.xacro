@@ -75,7 +75,7 @@
 		<visual>
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<geometry>
-				<mesh filename="package://wheelchair/meshes/middle_wheel.dae"/>
+				<mesh filename="package://wheelchair/meshes/middle_wheel.stl"/>
 				<!--<cylinder radius="${robot_wheel_radius}" length="${robot_wheel_length}"/>-->
 			</geometry>
 		</visual>
@@ -105,7 +105,7 @@
 		<visual>
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<geometry>
-				<mesh filename="package://wheelchair/meshes/middle_wheel.dae"/>
+				<mesh filename="package://wheelchair/meshes/middle_wheel.stl"/>
 				<!--<cylinder radius="${robot_wheel_radius}" length="${robot_wheel_length}"/>-->
 			</geometry>
 		</visual>
@@ -136,7 +136,7 @@
 		<visual>
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<geometry>
-				<mesh filename="package://wheelchair/meshes/middle_wheel.dae"/>
+				<mesh filename="package://wheelchair/meshes/middle_wheel.stl"/>
 				<!--<cylinder radius="${robot_wheel_radius}" length="${robot_wheel_length}"/>-->
 			</geometry>
 		</visual>
@@ -165,7 +165,7 @@
 		<visual>
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<geometry>
-				<mesh filename="package://wheelchair/meshes/middle_wheel.dae"/>
+				<mesh filename="package://wheelchair/meshes/middle_wheel.stl"/>
 				<!--<cylinder radius="${robot_wheel_radius}" length="${robot_wheel_length}"/>-->
 			</geometry>
 		</visual>
