@@ -65,7 +65,7 @@
 		</collision>
 
 		<visual>
-		<origin xyz="-0.523 -0.525 -0.128" rpy="0 0 0"/>
+		<origin xyz="-0.523 -0.525 -0.13" rpy="0 0 0"/>
 		<geometry>
 			<mesh filename="package://wheelchair/meshes/middle_wheel_left.dae"/>
 		</geometry>
@@ -93,7 +93,7 @@
 		</collision>
 
 		<visual>
-		<origin xyz="-0.523 -0.05 -0.128" rpy="0 0 0"/>
+		<origin xyz="-0.523 -0.05 -0.13" rpy="0 0 0"/>
 		<geometry>
 			<mesh filename="package://wheelchair/meshes/middle_wheel_right.dae"/>
 		</geometry>
@@ -114,10 +114,9 @@
 		</inertial>
 
 		<collision>
-		<origin xyz="-0.06 -0.053 -0.062" rpy="0 0 0"/>
+		<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
 		<geometry>
-			<mesh filename="package://wheelchair/meshes/right_wheel_back.dae"/>
-			<!--<cylinder radius="${rear_wheel_radius}" length="${rear_wheel_length}"/>-->
+			<cylinder radius="${rear_wheel_radius}" length="${rear_wheel_length}"/>
 		</geometry>
 		</collision>
 
@@ -172,7 +171,7 @@
 	</joint>
 
 	<joint type="continuous" name="left_wheel_hinge_front">
-		<origin xyz="0.523 0.525 0.128" rpy="0 0 0" />
+		<origin xyz="0.523 0.525 0.13" rpy="0 0 0" />
 		<parent link="chassis"/>
 		<child link="left_wheel" />
 		<axis xyz="0 1 0" rpy="0 0 0" />
@@ -181,7 +180,7 @@
   	</joint>
 
 	<joint type="continuous" name="right_wheel_hinge_front">
-		<origin xyz="0.523 0.05 0.128" rpy="0 0 0" />
+		<origin xyz="0.523 0.05 0.13" rpy="0 0 0" />
 		<parent link="chassis"/>
 		<child link="right_wheel" />
 		<axis xyz="0 1 0" rpy="0 0 0" />
