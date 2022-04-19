@@ -35,4 +35,19 @@
   <node name="rviz" pkg="rviz" type="rviz" respawn="false"
         args="-d $(find wheelchair)/default.rviz"/>
 
+  <rosparam file="$(find wheelchair)/config/joint_states.yaml" command="load"/>
+
+  <rosparam file="$(find wheelchair)/config/diff_drive.yaml" command="load"/>
+
+  <!-- load the controllers -->
+<node name="robot_arm_controller_spawner" pkg="controller_manager" type="spawner"
+  respawn="true" output="screen" 
+   args="/Diff_Drive/joint_state_controller
+         /Diff_Drive/diff_drive_controller
+        --shutdown-timeout 3"/>
+
+<node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+  <param name="default_topic" value="/Diff_Drive/diff_drive_controller/cmd_vel"/> 
+</node>
+
 </launch>
