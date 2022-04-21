@@ -2,3 +2,4 @@ wheelchair:
   z_position_upper_chassis_controller:
       type: effort_controllers/JointPositionController
       joint: upper_chassis_joint
+      pid: {p: 100.0, i: 0.01, d: 1.0}

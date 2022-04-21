@@ -73,14 +73,14 @@
 		</inertial>
 
 		<collision>
-			<origin xyz="-${x_upper_chassis} -${y_upper_chassis} -${y_upper_chassis}" rpy="0 0 0"/>
+			<origin xyz="-${x_upper_chassis} -${y_upper_chassis} -${z_upper_chassis}" rpy="0 0 0"/>
 			<geometry>
 				<mesh filename="package://wheelchair/meshes/upper_chassis.dae"/>
 			</geometry>
 		</collision>
 
 		<visual>
-			<origin xyz="-${x_upper_chassis} -${y_upper_chassis} -${y_upper_chassis}" rpy="0 0 0"/>
+			<origin xyz="-${x_upper_chassis} -${y_upper_chassis} -${z_upper_chassis}" rpy="0 0 0"/>
 			<geometry>
 				<mesh filename="package://wheelchair/meshes/upper_chassis.dae"/>
 			</geometry>
@@ -271,12 +271,11 @@
 	</joint>
 
 	<joint type="prismatic" name="upper_chassis_joint">
-		<origin xyz="${x_upper_chassis} ${y_upper_chassis} ${y_upper_chassis}" rpy="0 0 0" />
+		<origin xyz="${x_upper_chassis} ${y_upper_chassis} ${z_upper_chassis}" rpy="0 0 0" />
 		<parent link="chassis"/>
 		<child link="upper_chassis" />
 		<axis xyz="0 0 1"/>
-		<limit effort="10000" velocity="1000" />
-		<dynamics damping="1.0" friction="1.0" />
+		<limit effort="10000" lower="0.0" upper="1.0" velocity="1.0"/>
   	</joint>
 
 	<joint type="continuous" name="left_wheel_front_joint">
@@ -329,7 +328,7 @@
 		<parent link="right_wheel_support"/>
 		<child link="right_wheel_back" />
 		<axis xyz="0 1 0" rpy="0 0 0" />
-		<limit effort="10000" velocity="1000" />
+		<limit effort="10000" velocity="1000"/>
 		<dynamics damping="1.0" friction="1.0" />
   	</joint>
 
