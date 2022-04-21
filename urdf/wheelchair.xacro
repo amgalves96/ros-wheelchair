@@ -6,7 +6,8 @@
 	<!--<xacro:include filename="$(find wheelchair)/urdf/wheelchair.gazebo" />-->
 
 	<xacro:property name="robot_name" value="wheelchair" />
-	<xacro:property name="robot_chassis_mass" value="50"/>
+	<xacro:property name="chassis_mass" value="50"/>
+	<xacro:property name="upper_chassis_mass" value="30"/>
 	<xacro:property name="middle_wheel_mass" value="15"/>
 	<xacro:property name="middle_wheel_radius" value="0.128"/>
 	<xacro:property name="rear_wheel_radius" value="0.060"/>
@@ -23,13 +24,16 @@
 	<xacro:property name="x_back_diff" value="-0.023"/> <!-- Equals to: (x_back_wheel - x_wheel_support) -->
 	<xacro:property name="y_right_wheels_and_support" value="0.051"/>
 	<xacro:property name="y_left_wheels_and_support" value="0.527"/>
+	<xacro:property name="x_upper_chassis" value="0.42"/>
+	<xacro:property name="y_upper_chassis" value="0.29"/>
+	<xacro:property name="z_upper_chassis" value="0.4"/>
 
 	<!-- Make Chassis of Bot -->
 	<link name="chassis">
 		<pose>0 0 0.1 0 0 0</pose>
 
 		<inertial>
-			<mass value="${robot_chassis_mass}"/>
+			<mass value="${chassis_mass}"/>
       		<origin xyz="0.35 0.29 0.2" rpy=" 0 0 0"/>
 
       		<inertia 
@@ -51,7 +55,35 @@
 			<geometry>
                 <mesh filename="package://wheelchair/meshes/chassis_motor.dae"/>
 			</geometry>
+		</visual>
 
+	</link>
+
+	<link name="upper_chassis">
+
+		<inertial>
+			<mass value="${upper_chassis_mass}"/>
+      		<origin xyz="0 0 0" rpy=" 0 0 0"/>
+
+      		<inertia 
+      			ixx="0.147116667" ixy="0" ixz="0"
+      			iyy="0.334951167" iyz="0"
+      			izz="0.3978345"
+      		/>
+		</inertial>
+
+		<collision>
+			<origin xyz="-${x_upper_chassis} -${y_upper_chassis} -${y_upper_chassis}" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://wheelchair/meshes/upper_chassis.dae"/>
+			</geometry>
+		</collision>
+
+		<visual>
+			<origin xyz="-${x_upper_chassis} -${y_upper_chassis} -${y_upper_chassis}" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://wheelchair/meshes/upper_chassis.dae"/>
+			</geometry>
 		</visual>
 
 	</link>
@@ -59,27 +91,27 @@
 	<!-- Left Wheel -->
 	<link name="left_wheel">
 		<inertial>
-		<mass value="${middle_wheel_mass}"/>
-		<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
-		<inertia
-			ixx="0.1" ixy="0.0" ixz="0.0"
-			iyy="0.1" iyz="0.0"
-			izz="0.1"
-		/>
+			<mass value="${middle_wheel_mass}"/>
+			<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+			<inertia
+				ixx="0.1" ixy="0.0" ixz="0.0"
+				iyy="0.1" iyz="0.0"
+				izz="0.1"
+			/>
 		</inertial>
 
 		<collision>
-		<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
-		<geometry>
-			<cylinder radius="${middle_wheel_radius}" length="0.05"/>
-		</geometry>
+			<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+			<geometry>
+				<cylinder radius="${middle_wheel_radius}" length="0.05"/>
+			</geometry>
 		</collision>
 
 		<visual>
-		<origin xyz="-0.523 -${y_left_wheels_and_support} -0.13" rpy="0 0 0"/>
-		<geometry>
-			<mesh filename="package://wheelchair/meshes/middle_wheel_left.dae"/>
-		</geometry>
+			<origin xyz="-0.523 -${y_left_wheels_and_support} -0.13" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://wheelchair/meshes/middle_wheel_left.dae"/>
+			</geometry>
 		</visual>
 
 	</link>
@@ -173,7 +205,7 @@
 	<link name="left_wheel_support">
 		<inertial>
 		<mass value="${rear_wheel_support_mass}"/>
-		<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+		<origin xyz="0 0 0" rpy="0 0 0"/>
 		<inertia
 			ixx="0.1" ixy="0.0" ixz="0.0"
 			iyy="0.1" iyz="0.0"
@@ -201,7 +233,7 @@
 	<link name="right_wheel_support">
 		<inertial>
 		<mass value="${rear_wheel_support_mass}"/>
-		<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+		<origin xyz="0 0 0" rpy="0 0 0"/>
 		<inertia
 			ixx="0.1" ixy="0.0" ixz="0.0"
 			iyy="0.1" iyz="0.0"
@@ -237,6 +269,15 @@
 		<parent link="robot_footprint"/>
 		<child link="chassis" />
 	</joint>
+
+	<joint type="prismatic" name="upper_chassis_joint">
+		<origin xyz="${x_upper_chassis} ${y_upper_chassis} ${y_upper_chassis}" rpy="0 0 0" />
+		<parent link="chassis"/>
+		<child link="upper_chassis" />
+		<axis xyz="0 0 1"/>
+		<limit effort="10000" velocity="1000" />
+		<dynamics damping="1.0" friction="1.0" />
+  	</joint>
 
 	<joint type="continuous" name="left_wheel_front_joint">
 		<origin xyz="0.523 ${y_left_wheels_and_support} 0.13" rpy="0 0 0" />
@@ -292,6 +333,19 @@
 		<dynamics damping="1.0" friction="1.0" />
   	</joint>
 
+	<!-- ******** Define Transmissions ********** -->
+
+	<transmission name="upper_chassis_trans">
+		<type>transmission_interface/SimpleTransmission</type>
+		<actuator name="upper_chassis_motor">
+			<hardwareInterface>EffortJointInterface</hardwareInterface>
+			<mechanicalReduction>1</mechanicalReduction>
+		</actuator>
+		<joint name="upper_chassis_joint">
+			<hardwareInterface>EffortJointInterface</hardwareInterface>
+		</joint>
+ 	</transmission>
+
 	<transmission name="left_wheel_trans">
 		<type>transmission_interface/SimpleTransmission</type>
 		<actuator name="left_wheel_motor">
@@ -299,7 +353,7 @@
 			<mechanicalReduction>1</mechanicalReduction>
 		</actuator>
 		<joint name="left_wheel_front_joint">
-		<hardwareInterface>VelocityJointInterface</hardwareInterface>
+			<hardwareInterface>VelocityJointInterface</hardwareInterface>
 		</joint>
  	</transmission>
 
@@ -310,7 +364,7 @@
 			<mechanicalReduction>1</mechanicalReduction>
 		</actuator>
 		<joint name="right_wheel_front_joint">
-		<hardwareInterface>VelocityJointInterface</hardwareInterface>
+			<hardwareInterface>VelocityJointInterface</hardwareInterface>
 		</joint>
  	</transmission>
 

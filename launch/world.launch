@@ -39,15 +39,18 @@
 
   <rosparam file="$(find wheelchair)/config/diff_drive.yaml" command="load"/>
 
+  <rosparam file="$(find wheelchair)/config/effort.yaml" command="load"/>
+
   <!-- load the controllers -->
-<node name="robot_arm_controller_spawner" pkg="controller_manager" type="spawner"
+  <node name="controller_spawner" pkg="controller_manager" type="spawner"
   respawn="true" output="screen" 
-   args="/Diff_Drive/joint_state_controller
-         /Diff_Drive/diff_drive_controller
+   args="/wheelchair/joint_state_controller
+         /wheelchair/diff_drive_controller
+         /wheelchair/z_position_upper_chassis_controller
         --shutdown-timeout 3"/>
 
-<node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
-  <param name="default_topic" value="/Diff_Drive/diff_drive_controller/cmd_vel"/> 
-</node>
+  <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+    <param name="default_topic" value="/wheelchair/diff_drive_controller/cmd_vel"/> 
+  </node>
 
 </launch>

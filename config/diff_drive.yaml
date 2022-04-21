@@ -1,4 +1,4 @@
-Diff_Drive:
+wheelchair:
   diff_drive_controller:
      type: "diff_drive_controller/DiffDriveController"
      publish_rate: 50
