@@ -275,7 +275,7 @@
 		<parent link="chassis"/>
 		<child link="upper_chassis" />
 		<axis xyz="0 0 1"/>
-		<limit effort="10000" lower="0.0" upper="1.0" velocity="1.0"/>
+		<limit effort="10000" lower="0.0" upper="0.045" velocity="0.01"/>
   	</joint>
 
 	<joint type="continuous" name="left_wheel_front_joint">

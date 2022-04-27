@@ -53,4 +53,7 @@
     <param name="default_topic" value="/wheelchair/diff_drive_controller/cmd_vel"/> 
   </node>
 
+   <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui">
+  </node>
+
 </launch>
