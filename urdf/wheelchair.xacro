@@ -7,8 +7,8 @@
 
 	<xacro:property name="robot_name" value="wheelchair" />
 	<xacro:property name="chassis_mass" value="50"/>
-	<xacro:property name="upper_chassis_mass" value="30"/>
-	<xacro:property name="middle_wheel_mass" value="15"/>
+	<xacro:property name="upper_chassis_mass" value="20"/>
+	<xacro:property name="middle_wheel_mass" value="10"/>
 	<xacro:property name="middle_wheel_radius" value="0.128"/>
 	<xacro:property name="rear_wheel_radius" value="0.060"/>
 	<xacro:property name="rear_wheel_length" value="0.025"/>
@@ -30,6 +30,7 @@
 
 	<!-- Make Chassis of Bot -->
 	<link name="chassis">
+
 		<pose>0 0 0.1 0 0 0</pose>
 
 		<inertial>
@@ -90,6 +91,7 @@
 
 	<!-- Left Wheel -->
 	<link name="left_wheel">
+
 		<inertial>
 			<mass value="${middle_wheel_mass}"/>
 			<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
@@ -118,84 +120,87 @@
 
 	<!-- Right Wheel -->
 	<link name="right_wheel">
+
 		<inertial>
-		<mass value="${middle_wheel_mass}"/>
-		<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
-		<inertia
+			<mass value="${middle_wheel_mass}"/>
+			<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+			<inertia
 			ixx="0.1" ixy="0.0" ixz="0.0"
 			iyy="0.1" iyz="0.0"
 			izz="0.1"
-		/>
+			/>
 		</inertial>
 
 		<collision>
-		<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
-		<geometry>
-			<cylinder radius="${middle_wheel_radius}" length="0.05"/>
-		</geometry>
+			<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+			<geometry>
+				<cylinder radius="${middle_wheel_radius}" length="0.05"/>
+			</geometry>
 		</collision>
 
 		<visual>
-		<origin xyz="-0.523 -${y_right_wheels_and_support} -0.13" rpy="0 0 0"/>
-		<geometry>
-			<mesh filename="package://wheelchair/meshes/middle_wheel_right.dae"/>
-		</geometry>
+			<origin xyz="-0.523 -${y_right_wheels_and_support} -0.13" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://wheelchair/meshes/middle_wheel_right.dae"/>
+			</geometry>
 		</visual>
 
 	</link>
 
 	<!-- Right Wheel Back -->
 	<link name="right_wheel_back">
+
 		<inertial>
-		<mass value="${rear_wheel_mass}"/>
-		<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
-		<inertia
-			ixx="0.1" ixy="0.0" ixz="0.0"
-			iyy="0.1" iyz="0.0"
-			izz="0.1"
-		/>
+			<mass value="${rear_wheel_mass}"/>
+			<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+			<inertia
+				ixx="0.1" ixy="0.0" ixz="0.0"
+				iyy="0.1" iyz="0.0"
+				izz="0.1"
+			/>
 		</inertial>
 
 		<collision>
-		<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
-		<geometry>
-			<cylinder radius="${rear_wheel_radius}" length="${rear_wheel_length}"/>
-		</geometry>
+			<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+			<geometry>
+				<cylinder radius="${rear_wheel_radius}" length="${rear_wheel_length}"/>
+			</geometry>
 		</collision>
 
 		<visual>
-		<origin xyz="-${x_back_wheel} -${y_right_wheels_and_support} -${z_back_wheel}" rpy="0 0 0"/>
-		<geometry>
-			<mesh filename="package://wheelchair/meshes/right_wheel_back.dae"/>
-		</geometry>
+			<origin xyz="-${x_back_wheel} -${y_right_wheels_and_support} -${z_back_wheel}" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://wheelchair/meshes/right_wheel_back.dae"/>
+			</geometry>
 		</visual>
 
 	</link>
 
 	<!-- Left Wheel Back -->
 	<link name="left_wheel_back">
+
 		<inertial>
-		<mass value="${rear_wheel_mass}"/>
-		<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
-		<inertia
-			ixx="0.1" ixy="0.0" ixz="0.0"
-			iyy="0.1" iyz="0.0"
-			izz="0.1"
-		/>
+			<mass value="${rear_wheel_mass}"/>
+			<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+			<inertia
+				ixx="0.1" ixy="0.0" ixz="0.0"
+				iyy="0.1" iyz="0.0"
+				izz="0.1"
+			/>
 		</inertial>
 
 		<collision>
-		<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
-		<geometry>
-			<cylinder radius="${rear_wheel_radius}" length="${rear_wheel_length}"/>
-		</geometry>
+			<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+			<geometry>
+				<cylinder radius="${rear_wheel_radius}" length="${rear_wheel_length}"/>
+			</geometry>
 		</collision>
 
 		<visual>
-		<origin xyz="-${x_back_wheel} -${y_left_wheels_and_support} -${z_back_wheel}" rpy="0 0 0"/>
-		<geometry>
-			<mesh filename="package://wheelchair/meshes/left_wheel_back.dae"/>
-		</geometry>
+			<origin xyz="-${x_back_wheel} -${y_left_wheels_and_support} -${z_back_wheel}" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://wheelchair/meshes/left_wheel_back.dae"/>
+			</geometry>
 		</visual>
 
 	</link>
@@ -203,64 +208,64 @@
 
 	<!-- Left Wheel Support -->
 	<link name="left_wheel_support">
+
 		<inertial>
-		<mass value="${rear_wheel_support_mass}"/>
-		<origin xyz="0 0 0" rpy="0 0 0"/>
-		<inertia
-			ixx="0.1" ixy="0.0" ixz="0.0"
-			iyy="0.1" iyz="0.0"
-			izz="0.1"
-		/>
+			<mass value="${rear_wheel_support_mass}"/>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<inertia
+				ixx="0.1" ixy="0.0" ixz="0.0"
+				iyy="0.1" iyz="0.0"
+				izz="0.1"
+			/>
 		</inertial>
 
 		<collision>
-		<origin xyz="-${x_wheel_support} -${y_left_wheels_and_support} -${z_wheel_support}" rpy="0 0 0"/>
-		<geometry>
-			<mesh filename="package://wheelchair/meshes/left_wheel_support.dae"/>
-		</geometry>
+			<origin xyz="-${x_wheel_support} -${y_left_wheels_and_support} -${z_wheel_support}" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://wheelchair/meshes/left_wheel_support.dae"/>
+			</geometry>
 		</collision>
 
 		<visual>
-		<origin xyz="-${x_wheel_support} -${y_left_wheels_and_support} -${z_wheel_support}" rpy="0 0 0"/>
-		<geometry>
-			<mesh filename="package://wheelchair/meshes/left_wheel_support.dae"/>
-		</geometry>
+			<origin xyz="-${x_wheel_support} -${y_left_wheels_and_support} -${z_wheel_support}" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://wheelchair/meshes/left_wheel_support.dae"/>
+			</geometry>
 		</visual>
 
 	</link>
 
 	<!-- Right Wheel Support -->
 	<link name="right_wheel_support">
+
 		<inertial>
-		<mass value="${rear_wheel_support_mass}"/>
-		<origin xyz="0 0 0" rpy="0 0 0"/>
-		<inertia
-			ixx="0.1" ixy="0.0" ixz="0.0"
-			iyy="0.1" iyz="0.0"
-			izz="0.1"
-		/>
+			<mass value="${rear_wheel_support_mass}"/>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<inertia
+				ixx="0.1" ixy="0.0" ixz="0.0"
+				iyy="0.1" iyz="0.0"
+				izz="0.1"
+			/>
 		</inertial>
 
 		<collision>
-		<origin xyz="-${x_wheel_support} -${y_right_wheels_and_support} -${z_wheel_support}" rpy="0 0 0"/>
-		<geometry>
-			<mesh filename="package://wheelchair/meshes/right_wheel_support.dae"/>
-		</geometry>
+			<origin xyz="-${x_wheel_support} -${y_right_wheels_and_support} -${z_wheel_support}" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://wheelchair/meshes/right_wheel_support.dae"/>
+			</geometry>
 		</collision>
 
 		<visual>
-		<origin xyz="-${x_wheel_support} -${y_right_wheels_and_support} -${z_wheel_support}" rpy="0 0 0"/>
-		<geometry>
-			<mesh filename="package://wheelchair/meshes/right_wheel_support.dae"/>
-		</geometry>
+			<origin xyz="-${x_wheel_support} -${y_right_wheels_and_support} -${z_wheel_support}" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://wheelchair/meshes/right_wheel_support.dae"/>
+			</geometry>
 		</visual>
 
 	</link>
 
 	<!-- Project center to the ground -->
 	<link name="robot_footprint"></link>
-
-
 
 	<!-- ******** Define Joints ********** -->
 
@@ -271,7 +276,7 @@
 	</joint>
 
 	<joint type="prismatic" name="upper_chassis_joint">
-		<origin xyz="${x_upper_chassis} ${y_upper_chassis} ${z_upper_chassis}" rpy="0 0 0" />
+		<origin xyz="${x_upper_chassis} ${y_upper_chassis} 0.37" rpy="0 0 0" />
 		<parent link="chassis"/>
 		<child link="upper_chassis" />
 		<axis xyz="0 0 1"/>
