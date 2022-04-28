@@ -47,6 +47,7 @@
    args="/wheelchair/joint_state_controller
          /wheelchair/diff_drive_controller
          /wheelchair/z_position_upper_chassis_controller
+         /wheelchair/back_controller
         --shutdown-timeout 3"/>
 
   <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">

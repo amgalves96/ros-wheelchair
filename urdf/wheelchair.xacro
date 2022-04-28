@@ -7,7 +7,8 @@
 
 	<xacro:property name="robot_name" value="wheelchair" />
 	<xacro:property name="chassis_mass" value="50"/>
-	<xacro:property name="upper_chassis_mass" value="20"/>
+	<xacro:property name="upper_chassis_mass" value="15"/>
+	<xacro:property name="back_mass" value="5"/>
 	<xacro:property name="middle_wheel_mass" value="10"/>
 	<xacro:property name="middle_wheel_radius" value="0.128"/>
 	<xacro:property name="rear_wheel_radius" value="0.060"/>
@@ -27,6 +28,12 @@
 	<xacro:property name="x_upper_chassis" value="0.42"/>
 	<xacro:property name="y_upper_chassis" value="0.29"/>
 	<xacro:property name="z_upper_chassis" value="0.4"/>
+	<xacro:property name="x_back" value="0.17"/>
+	<xacro:property name="y_back" value="0.29"/>
+	<xacro:property name="z_back" value="0.45"/>
+	<xacro:property name="x_back_joint" value="0.25"/>
+	<xacro:property name="y_back_joint" value="0.0"/>
+	<xacro:property name="z_back_joint" value="0.051"/>
 
 	<!-- Make Chassis of Bot -->
 	<link name="chassis">
@@ -76,14 +83,43 @@
 		<collision>
 			<origin xyz="-${x_upper_chassis} -${y_upper_chassis} -${z_upper_chassis}" rpy="0 0 0"/>
 			<geometry>
-				<mesh filename="package://wheelchair/meshes/upper_chassis.dae"/>
+				<mesh filename="package://wheelchair/meshes/upper_chassis_no_back.dae"/>
 			</geometry>
 		</collision>
 
 		<visual>
 			<origin xyz="-${x_upper_chassis} -${y_upper_chassis} -${z_upper_chassis}" rpy="0 0 0"/>
 			<geometry>
-				<mesh filename="package://wheelchair/meshes/upper_chassis.dae"/>
+				<mesh filename="package://wheelchair/meshes/upper_chassis_no_back.dae"/>
+			</geometry>
+		</visual>
+
+	</link>
+
+	<link name="back">
+
+		<inertial>
+			<mass value="${back_mass}"/>
+      		<origin xyz="0 0 0" rpy=" 0 0 0"/>
+
+      		<inertia 
+      			ixx="0.147116667" ixy="0" ixz="0"
+      			iyy="0.334951167" iyz="0"
+      			izz="0.3978345"
+      		/>
+		</inertial>
+
+		<collision>
+			<origin xyz="-${x_back} -${y_back} -${z_back}" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://wheelchair/meshes/back.dae"/>
+			</geometry>
+		</collision>
+
+		<visual>
+			<origin xyz="-${x_back} -${y_back} -${z_back}" rpy="0 0 0"/>
+			<geometry>
+				<mesh filename="package://wheelchair/meshes/back.dae"/>
 			</geometry>
 		</visual>
 
@@ -276,11 +312,21 @@
 	</joint>
 
 	<joint type="prismatic" name="upper_chassis_joint">
-		<origin xyz="${x_upper_chassis} ${y_upper_chassis} 0.37" rpy="0 0 0" />
+		<!--<origin xyz="${x_upper_chassis} ${y_upper_chassis} ${z_upper_chassis}" rpy="0 0 0" />-->
+		<origin xyz="${x_upper_chassis} ${y_upper_chassis} 0.38" rpy="0 0 0" />-
 		<parent link="chassis"/>
 		<child link="upper_chassis" />
 		<axis xyz="0 0 1"/>
 		<limit effort="10000" lower="0.0" upper="0.045" velocity="0.01"/>
+  	</joint>
+
+	<joint type="revolute" name="back_joint">
+		<origin xyz="-${x_back_joint} ${y_back_joint} ${z_back_joint}" rpy="0 0 0"/>
+		<parent link="upper_chassis"/>
+		<child link="back" />
+		<axis xyz="0 1 0"/>
+		<limit effort="10000" velocity="10" upper="0" lower="0"/>
+		<dynamics damping="1.0" friction="1.0" />
   	</joint>
 
 	<joint type="continuous" name="left_wheel_front_joint">
@@ -349,6 +395,17 @@
 			<hardwareInterface>EffortJointInterface</hardwareInterface>
 		</joint>
  	</transmission>
+
+	<transmission name="back_trans">
+		<type>transmission_interface/SimpleTransmission</type>
+		<actuator name="back_motor">
+			<hardwareInterface>EffortJointInterface</hardwareInterface>
+			<mechanicalReduction>1</mechanicalReduction>
+		</actuator>
+		<joint name="back_joint">
+			<hardwareInterface>EffortJointInterface</hardwareInterface>
+		</joint>
+	</transmission> 
 
 	<transmission name="left_wheel_trans">
 		<type>transmission_interface/SimpleTransmission</type>
