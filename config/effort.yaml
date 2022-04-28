@@ -7,4 +7,4 @@ wheelchair:
   back_controller:
       type: effort_controllers/JointPositionController
       joint: back_joint
-      pid: {p: 18000.0, i: -500.0, d: 160.0}
+      pid: {p: 2000.0, i: 0.0, d: 60.0}

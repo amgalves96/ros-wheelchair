@@ -6,10 +6,10 @@
 	<!--<xacro:include filename="$(find wheelchair)/urdf/wheelchair.gazebo" />-->
 
 	<xacro:property name="robot_name" value="wheelchair" />
-	<xacro:property name="chassis_mass" value="50"/>
-	<xacro:property name="upper_chassis_mass" value="15"/>
+	<xacro:property name="chassis_mass" value="60"/>
+	<xacro:property name="upper_chassis_mass" value="20"/>
 	<xacro:property name="back_mass" value="5"/>
-	<xacro:property name="middle_wheel_mass" value="10"/>
+	<xacro:property name="middle_wheel_mass" value="15"/>
 	<xacro:property name="middle_wheel_radius" value="0.128"/>
 	<xacro:property name="rear_wheel_radius" value="0.060"/>
 	<xacro:property name="rear_wheel_length" value="0.025"/>
@@ -317,7 +317,7 @@
 		<parent link="chassis"/>
 		<child link="upper_chassis" />
 		<axis xyz="0 0 1"/>
-		<limit effort="10000" lower="0.0" upper="0.045" velocity="0.01"/>
+		<limit effort="10000" lower="0.0" upper="0.045" velocity="1.0"/>
   	</joint>
 
 	<joint type="revolute" name="back_joint">
@@ -325,7 +325,7 @@
 		<parent link="upper_chassis"/>
 		<child link="back" />
 		<axis xyz="0 1 0"/>
-		<limit effort="10000" velocity="10" upper="0" lower="0"/>
+		<limit effort="10000" velocity="1.0" upper="0.3" lower="-1.0"/>
 		<dynamics damping="1.0" friction="1.0" />
   	</joint>
 

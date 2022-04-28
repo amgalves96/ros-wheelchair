@@ -32,8 +32,11 @@
               -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)"/>
   
   <!--launch rviz-->
-  <node name="rviz" pkg="rviz" type="rviz" respawn="false"
+  <!--
+ <node name="rviz" pkg="rviz" type="rviz" respawn="false"
         args="-d $(find wheelchair)/default.rviz"/>
+  -->
+ 
 
   <rosparam file="$(find wheelchair)/config/joint_states.yaml" command="load"/>
 
@@ -54,7 +57,7 @@
     <param name="default_topic" value="/wheelchair/diff_drive_controller/cmd_vel"/> 
   </node>
 
-   <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui">
+  <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui">
   </node>
 
 </launch>
