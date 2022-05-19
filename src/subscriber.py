@@ -3,7 +3,7 @@ import rospy
 from std_msgs.msg import Float64
 from control_msgs.msg import JointControllerState
 import paho.mqtt.client as mqtt #import the client1
-
+#
 mqtt = mqtt.Client("PC ROS GAZEBO")
 
 try:
