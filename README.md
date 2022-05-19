@@ -1,7 +1,6 @@
-# wheelchair
-Power wheelchair Digital Twin with ROS
+# Power Wheelchair Digital Twin with ROS, MQTT and LEGO EV3
 
-This repo includes a ROS workspace containing an implementation of a Digital Twin model under a power wheelchair.
+This repo includes a ROS workspace containing an implementation of a Digital Twin model under a power wheelchair plus an MQTT connection to Lego EV3 with ev3dev OS.
 
 # Import Steps
 
