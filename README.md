@@ -4,6 +4,8 @@ This repo includes a ROS workspace containing an implementation of a Digital Twi
 
 # Import Steps
 
+Clone repo:
+
 ```
 git clone https://github.com/amgalves96/wheelchair.git
 cd wheelchair
@@ -11,5 +13,14 @@ catkin_make
 cd ~/catkin_ws
 sudo apt-get install ros-noetic-ros-control ros-noetic-ros-controllers
 source devel/setup.bash
+```
+
+Launch files:
+
+```
 roslaunch wheelchair world.launch
+```
+Open new terminal:
+```
+rosrun wheelchair subscriber.py
 ```
