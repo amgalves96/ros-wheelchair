@@ -7,17 +7,26 @@ import paho.mqtt.client as mqtt #import the client1
 
 mqtt = mqtt.Client("PC ROS GAZEBO")
 
+z_pos_data = 0.0
+z_process_value = 0.0
+
 try:
     mqtt.connect("192.168.0.107", 1883)
 except:
     raise ValueError("Couldn't connect to MQTT broker.")
 
 def callbackstate(data):
-    rospy.loginfo("Process value is: %f", data.process_value)
+    #rospy.loginfo("Process value is: %f", data.process_value)
+    global z_process_value 
+    z_process_value= data.process_value 
+    pass
 
 def callback(data):
-    rospy.loginfo("Data value is: %f", data.data)
-    mqtt.publish("/TopicData", data.data)
+    #rospy.loginfo("Data value is: %f", data.data)
+    #mqtt.publish("/TopicData", data.data)
+    global z_pos_data 
+    z_pos_data= data.data
+    pass
     
 def listener():
 
@@ -34,5 +43,20 @@ def listener():
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
 
+def go_up():
+    pub = rospy.Publisher('/wheelchair/z_position_upper_chassis_controller/command/', Float64, queue_size=10)
+    rospy.init_node('py_go_up', anonymous=True)
+    rate = rospy.Rate(50) # 50hz
+    while not rospy.is_shutdown():
+        msg = Float64()
+        msg.data = float(input("Data: "))
+        pub.publish(msg)
+        rate.sleep()
+
 if __name__ == '__main__':
-    listener()
+    #listener()
+  
+    try:
+        go_up()
+    except rospy.ROSInterruptException:
+        pass
