@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.8
 
 from http import client
+import sys
 import rospy
 from std_msgs.msg import String
 from std_msgs.msg import Float64
@@ -8,10 +9,13 @@ from control_msgs.msg import JointControllerState
 import paho.mqtt.client as mqtt
 import time
 
-z_pos_data = 0.0
+z_pos_data = 0.015
 z_process_value = 0.0
 
-MAX_ZPOS = 55
+SPEED_MAX_ZPOS = 55
+MAX_ZPOS = 0.0274962132356834
+MAX_ZPOS_EV3 = -215
+SPEED = 35 # Hz
 ev3_z_pos = 0
 
 
@@ -21,7 +25,7 @@ def callback_state(data):
     z_process_value= data.process_value 
 
 def callback_data(data):
-    #rospy.loginfo("Data value is: %f", data.data)
+    print("Data value is: ", data.data)
     #mqtt.publish("/TopicData", data.data)
     global z_pos_data 
     z_pos_data= data.data
@@ -38,13 +42,14 @@ def subscribe_ros_topics():
 
 
 def go_down(ev3_pos):
-
-    pub = rospy.Publisher('/wheelchair/z_position_upper_chassis_controller/command/', Float64, queue_size=10)
+    pub = rospy.Publisher('/wheelchair/z_position_upper_chassis_controller/command/', Float64, queue_size=1)
     #rospy.init_node('py_go_up', anonymous=True)
-    rate = rospy.Rate(35) # Hz -> SPEED
+    rate = rospy.Rate(SPEED)
 
-    for i in range(MAX_ZPOS - 10, 1, -1):
-                if z_process_value > 0:
+    desired_pos = ev3_pos*MAX_ZPOS/MAX_ZPOS_EV3
+
+    for i in range(int(z_pos_data*1000), 1, -1):
+                if z_process_value > desired_pos:
                     msg = Float64()
                     #msg.data = float(input("Data: "))
                     msg.data = 0.001*i
@@ -54,15 +59,18 @@ def go_down(ev3_pos):
                     break
 
 def go_up(ev3_pos):
-    pub = rospy.Publisher('/wheelchair/z_position_upper_chassis_controller/command/', Float64, queue_size=10)
+    pub = rospy.Publisher('/wheelchair/z_position_upper_chassis_controller/command/', Float64, queue_size=1)
     #rospy.init_node('py_go_up', anonymous=True)
-    rate = rospy.Rate(35) # Hz -> SPEED
+    rate = rospy.Rate(SPEED)
+
+    desired_pos = ev3_pos*MAX_ZPOS/MAX_ZPOS_EV3
    
-    for i in range(20, MAX_ZPOS):
-        if z_process_value < 0.027496213:
+    for i in range(int(z_pos_data*1000), SPEED_MAX_ZPOS):
+        if z_process_value < desired_pos:
             msg = Float64()
             #msg.data = float(input("Data: "))
             msg.data = 0.001*i
+            print(msg.data)
             pub.publish(msg)
             rate.sleep()
         else:
@@ -84,13 +92,13 @@ def on_message(client, userdata, msg):
     decoded_msg = int(msg.payload.decode("utf-8"))
     print(decoded_msg)
     global ev3_z_pos
-    if decoded_msg > ev3_z_pos:
+    if decoded_msg < ev3_z_pos:
         ev3_z_pos = decoded_msg
         try:
             go_up(decoded_msg)
         except rospy.ROSInterruptException:
             pass
-    elif decoded_msg < ev3_z_pos:
+    elif decoded_msg > ev3_z_pos:
         ev3_z_pos = decoded_msg
         try:
             go_down(decoded_msg)
