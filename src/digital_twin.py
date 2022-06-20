@@ -42,7 +42,7 @@ def subscribe_ros_topics():
 
 
 def go_down(ev3_pos):
-    pub = rospy.Publisher('/wheelchair/z_position_upper_chassis_controller/command/', Float64, queue_size=1)
+    pub = rospy.Publisher('/wheelchair/z_position_upper_chassis_controller/command/', Float64, queue_size=5)
     #rospy.init_node('py_go_up', anonymous=True)
     rate = rospy.Rate(SPEED)
 
@@ -59,7 +59,7 @@ def go_down(ev3_pos):
                     break
 
 def go_up(ev3_pos):
-    pub = rospy.Publisher('/wheelchair/z_position_upper_chassis_controller/command/', Float64, queue_size=1)
+    pub = rospy.Publisher('/wheelchair/z_position_upper_chassis_controller/command/', Float64, queue_size=5)
     #rospy.init_node('py_go_up', anonymous=True)
     rate = rospy.Rate(SPEED)
 
