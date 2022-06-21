@@ -6,20 +6,20 @@
 	<!--<xacro:include filename="$(find wheelchair)/urdf/wheelchair.gazebo" />-->
 
 	<xacro:property name="robot_name" value="wheelchair" />
-	<xacro:property name="chassis_mass" value="100"/>
+	<xacro:property name="chassis_mass" value="60"/>
 	<xacro:property name="upper_chassis_mass" value="20"/>
 	<xacro:property name="back_mass" value="5"/>
 	<xacro:property name="middle_wheel_mass" value="15"/>
-	<xacro:property name="middle_wheel_radius" value="0.13"/>
-	<xacro:property name="middle_wheel_length" value="0.07"/>
+	<xacro:property name="middle_wheel_radius" value="0.128"/>
+	<xacro:property name="middle_wheel_length" value="0.05"/>
 	<xacro:property name="rear_wheel_radius" value="0.060"/>
 	<xacro:property name="rear_wheel_length" value="0.025"/>
-	<xacro:property name="rear_wheel_mass" value="4"/>
+	<xacro:property name="rear_wheel_mass" value="3"/>
 	<xacro:property name="rear_wheel_support_mass" value="2"/>
 
 	<!-- Axis Values-->
 	<xacro:property name="z_wheel_support" value="0.125"/>
-	<xacro:property name="z_back_wheel" value="0.06"/>
+	<xacro:property name="z_back_wheel" value="0.062"/>
 	<xacro:property name="z_back_diff" value="-0.063"/> <!-- Equals to: (z_back_wheel - z_wheel_support) -->
 	<xacro:property name="x_wheel_support" value="0.083"/>
 	<xacro:property name="x_back_wheel" value="0.06"/>
@@ -141,7 +141,7 @@
 		</inertial>
 
 		<collision>
-			<origin xyz="0 0 -0.001" rpy="0 1.5707 1.5707"/>
+			<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
 			<geometry>
 				<cylinder radius="${middle_wheel_radius}" length="${middle_wheel_length}"/>
 			</geometry>
@@ -170,7 +170,7 @@
 		</inertial>
 
 		<collision>
-			<origin xyz="0 0 -0.001" rpy="0 1.5707 1.5707"/>
+			<origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
 			<geometry>
 				<cylinder radius="${middle_wheel_radius}" length="${middle_wheel_length}"/>
 			</geometry>

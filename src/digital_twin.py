@@ -15,7 +15,7 @@ z_process_value = 0.0
 SPEED_MAX_ZPOS = 55
 MAX_ZPOS = 0.0274962132356834
 MAX_ZPOS_EV3 = -215
-SPEED = 35 # Hz
+SPEED = 75 # Hz
 ev3_z_pos = 0
 
 
@@ -49,14 +49,14 @@ def go_down(ev3_pos):
     desired_pos = ev3_pos*MAX_ZPOS/MAX_ZPOS_EV3
 
     for i in range(int(z_pos_data*1000), 1, -1):
-                if z_process_value > desired_pos:
-                    msg = Float64()
-                    #msg.data = float(input("Data: "))
-                    msg.data = 0.001*i
-                    pub.publish(msg)
-                    rate.sleep()
-                else:
-                    break
+        if z_process_value > desired_pos:
+            msg = Float64()
+            #msg.data = float(input("Data: "))
+            msg.data = 0.001*i
+            pub.publish(msg)
+            rate.sleep()
+        else:
+            break
 
 def go_up(ev3_pos):
     pub = rospy.Publisher('/wheelchair/z_position_upper_chassis_controller/command/', Float64, queue_size=5)
@@ -65,7 +65,7 @@ def go_up(ev3_pos):
 
     desired_pos = ev3_pos*MAX_ZPOS/MAX_ZPOS_EV3
    
-    for i in range(int(z_pos_data*1000), SPEED_MAX_ZPOS):
+    for i in range(int(z_pos_data*1000), SPEED_MAX_ZPOS, 1):
         if z_process_value < desired_pos:
             msg = Float64()
             #msg.data = float(input("Data: "))
