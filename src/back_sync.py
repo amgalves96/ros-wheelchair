@@ -9,8 +9,8 @@ from control_msgs.msg import JointControllerState
 import paho.mqtt.client as mqtt
 import time
 
-z_pos_data = 0.015
-z_process_value = 0.0
+cmd_data = 0.015
+process_value = 0.0
 
 SPEED_MAX_ZPOS = 55
 MAX_ZPOS = 0.0274962132356834
@@ -21,31 +21,32 @@ ev3_z_pos = 0
 
 def callback_state(data):
     #rospy.loginfo("Process value is: %f", data.process_value)
-    global z_process_value 
-    z_process_value= data.process_value 
+    global process_value 
+    process_value= data.process_value 
 
 def callback_data(data):
     print("Data value is: ", data.data)
     #mqtt.publish("/TopicData", data.data)
-    global z_pos_data 
-    z_pos_data= data.data
+    global cmd_data 
+    cmd_data= data.data
     
 def subscribe_ros_topics():
 
-    rospy.init_node('up_down_motor', anonymous=True)
+    rospy.init_node('back_motor', anonymous=True)
 
-    rospy.Subscriber("/wheelchair/z_position_upper_chassis_controller/command/", Float64, callback_data)
-    rospy.Subscriber("/wheelchair/z_position_upper_chassis_controller/state", JointControllerState, callback_state)
+    rospy.Subscriber("/wheelchair/back_controller/command/", Float64, callback_data)
+    rospy.Subscriber("/wheelchair/back_controller/state/", JointControllerState, callback_state)
 
     # spin() simply keeps python from exiting until this node is stopped
     #rospy.spin()
 
 
-def go_down(ev3_pos):
-    pub = rospy.Publisher('/wheelchair/z_position_upper_chassis_controller/command/', Float64, queue_size=5)
+def go_backwards(ev3_pos):
+    pub = rospy.Publisher('/wheelchair/back_controller/command/', Float64, queue_size=5)
     #rospy.init_node('py_go_up', anonymous=True)
     rate = rospy.Rate(SPEED)
 
+    # VER QUAIS OS LIMITES DO MOTOR DAS COSTAS E MUDAR
     desired_pos = ev3_pos*MAX_ZPOS/MAX_ZPOS_EV3
 
     for i in range(int(z_pos_data*1000), 1, -1):
@@ -58,7 +59,7 @@ def go_down(ev3_pos):
         else:
             break
 
-def go_up(ev3_pos):
+def go_forward(ev3_pos):
     pub = rospy.Publisher('/wheelchair/z_position_upper_chassis_controller/command/', Float64, queue_size=5)
     #rospy.init_node('py_go_up', anonymous=True)
     rate = rospy.Rate(SPEED)
@@ -71,6 +72,7 @@ def go_up(ev3_pos):
             #msg.data = float(input("Data: "))
             msg.data = 0.001*i
             print(msg.data)
+            #time.sleep(0.001)
             pub.publish(msg)
             rate.sleep()
         else:
