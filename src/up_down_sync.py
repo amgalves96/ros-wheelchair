@@ -9,14 +9,15 @@ from control_msgs.msg import JointControllerState
 import paho.mqtt.client as mqtt
 import time
 
-z_pos_data = 0.015
+z_pos_data = 0.0
 z_process_value = 0.0
 
-SPEED_MAX_ZPOS = 55
-MAX_ZPOS = 0.0274962132356834
+SPEED_MAX_ZPOS = 45
+MAX_ZPOS = 0.04255
 MAX_ZPOS_EV3 = -215
-SPEED = 75 # Hz
+SPEED = 150 # Hz
 ev3_z_pos = 0
+last_decoded_msg = 0
 
 
 def callback_state(data):
@@ -48,7 +49,7 @@ def go_down(ev3_pos):
 
     desired_pos = ev3_pos*MAX_ZPOS/MAX_ZPOS_EV3
 
-    for i in range(int(z_pos_data*1000), 1, -1):
+    for i in range(int(z_pos_data*1000), -1, -1):
         if z_process_value > desired_pos:
             msg = Float64()
             #msg.data = float(input("Data: "))
@@ -65,7 +66,7 @@ def go_up(ev3_pos):
 
     desired_pos = ev3_pos*MAX_ZPOS/MAX_ZPOS_EV3
    
-    for i in range(int(z_pos_data*1000), SPEED_MAX_ZPOS, 1):
+    for i in range(int(z_pos_data*1000), SPEED_MAX_ZPOS + 1, 1):
         if z_process_value < desired_pos:
             msg = Float64()
             #msg.data = float(input("Data: "))
@@ -91,7 +92,10 @@ def on_message(client, userdata, msg):
     #print(f"Message received [{msg.topic}]: {msg.payload}")
     #print(type(msg.payload))
     decoded_msg = int(msg.payload.decode("utf-8"))
-    print(decoded_msg)
+    global last_decoded_msg
+    if decoded_msg != last_decoded_msg:
+        print(decoded_msg)
+        last_decoded_msg = decoded_msg
     global ev3_z_pos
     if decoded_msg < ev3_z_pos:
         ev3_z_pos = decoded_msg

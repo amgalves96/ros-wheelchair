@@ -13,8 +13,9 @@ cmd_data = 0.015
 process_value = 0.0
 
 SPEED_MAX_ZPOS = 55
-MAX_ZPOS = 0.0274962132356834
-MAX_ZPOS_EV3 = -215
+MAX_POS = 0.8
+MIN_POS = -0.5773
+MAX_POS_EV3 = -95
 SPEED = 75 # Hz
 ev3_z_pos = 0
 

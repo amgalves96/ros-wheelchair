@@ -321,6 +321,7 @@
 		<child link="upper_chassis" />
 		<axis xyz="0 0 1"/>
 		<limit effort="10000" lower="0.0" upper="0.045" velocity="1.0"/>
+		<dynamics damping="1.0" friction="1.0" />
   	</joint>
 
 	<joint type="revolute" name="back_joint">
@@ -328,7 +329,7 @@
 		<parent link="upper_chassis"/>
 		<child link="back" />
 		<axis xyz="0 1 0"/>
-		<limit effort="10000" velocity="1.0" upper="0.3" lower="-1.0"/>
+		<limit effort="10000" velocity="1.0" upper="1.0" lower="-0.5773"/>
 		<dynamics damping="1.0" friction="1.0" />
   	</joint>
 
