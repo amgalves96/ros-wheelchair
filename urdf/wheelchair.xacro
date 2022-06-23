@@ -329,7 +329,7 @@
 		<parent link="upper_chassis"/>
 		<child link="back" />
 		<axis xyz="0 1 0"/>
-		<limit effort="10000" velocity="1.0" upper="1.0" lower="-0.5773"/>
+		<limit effort="10000" velocity="1.0" upper="0.8" lower="-0.5773"/>
 		<dynamics damping="1.0" friction="1.0" />
   	</joint>
 
