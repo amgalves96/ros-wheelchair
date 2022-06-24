@@ -21,13 +21,17 @@ BACK_MIN_POS = -0.5773
 #MAX_ZPOS_EV3 = -215
 
 UP_DOWN_MAX_POS = 0.045
-UP_DOWN_MIN_POS = 0.0
+UP_DOWN_MIN_POS = 0
 #MAX_ZPOS = 0.04255
 #MAX_ZPOS_EV3 = -215
-BACK_SPEED = 40 # Hz
+BACK_SPEED = 100 # Hz
 UP_DOWN_SPEED = 40 # Hz
 #ev3_z_pos = 0
-last_decoded_msg = 0
+last_decoded_msg_top_down = ''
+last_decoded_msg_back = ''
+
+cmd_top_down = ''
+cmd_back = ''
 
 
 def callback_up_down_state(data):
@@ -70,32 +74,36 @@ def subscribe_ros_topics():
 
 
 def go_down():
-    pub = rospy.Publisher('/wheelchair/z_position_upper_chassis_controller/command/', Float64, queue_size=5)
+    pub = rospy.Publisher('/wheelchair/z_position_upper_chassis_controller/command/', Float64, queue_size=1)
     #rospy.init_node('py_go_up', anonymous=True)
     rate = rospy.Rate(UP_DOWN_SPEED)
 
-    #for i in range(int(z_pos_data*1000), -1, -1):
-    msg = Float64()
+    for i in range(int(up_down_pos_data*1000), UP_DOWN_MIN_POS - 1, -1):
+        if cmd_top_down == "s_ud":
+            break
+        msg = Float64()
     #msg.data = float(input("Data: "))
-    #msg.data = 0.001*i
-    if up_down_pos_data > UP_DOWN_MIN_POS:
-        msg.data = up_down_pos_data - 0.001
+        msg.data = 0.001*i
+        #if up_down_pos_data > UP_DOWN_MIN_POS:
+            #msg.data = up_down_pos_data - 0.001
         print(msg.data)
         pub.publish(msg)
         rate.sleep()
 
 
 def go_up():
-    pub = rospy.Publisher('/wheelchair/z_position_upper_chassis_controller/command/', Float64, queue_size=5)
+    pub = rospy.Publisher('/wheelchair/z_position_upper_chassis_controller/command/', Float64, queue_size=1)
     #rospy.init_node('py_go_up', anonymous=True)
     rate = rospy.Rate(UP_DOWN_SPEED)
    
-    #for i in range(int(z_pos_data*1000), SPEED_MAX_ZPOS + 1, 1):
-    msg = Float64()
+    for i in range(int(up_down_pos_data*1000), int((UP_DOWN_MAX_POS*1000)) + 1, 1):
+        if cmd_top_down == "s_ud":
+            break
+        msg = Float64()
     #msg.data = float(input("Data: "))
-    #msg.data = 0.001*i
-    if up_down_pos_data < UP_DOWN_MAX_POS:
-        msg.data = up_down_pos_data + 0.001
+        msg.data = 0.001*i
+    #if up_down_pos_data < UP_DOWN_MAX_POS:
+        #msg.data = up_down_pos_data + 0.001
         print(msg.data)
         #time.sleep(0.001)
         pub.publish(msg)
@@ -107,16 +115,18 @@ def go_up():
 
 
 def forward():
-    pub = rospy.Publisher('/wheelchair/back_controller/command/', Float64, queue_size=5)
+    pub = rospy.Publisher('/wheelchair/back_controller/command/', Float64, queue_size=1)
     #rospy.init_node('py_go_up', anonymous=True)
     rate = rospy.Rate(BACK_SPEED)
    
-    #for i in range(int(z_pos_data*1000), SPEED_MAX_ZPOS + 1, 1):
-    msg = Float64()
+    for i in range(int(back_data*100), int(BACK_MAX_POS*100) + 1, 1):
+        if cmd_back == "s_b":
+            break
+        msg = Float64()
     #msg.data = float(input("Data: "))
-    #msg.data = 0.001*i
-    if back_data < BACK_MAX_POS:
-        msg.data = back_data + 0.035
+        msg.data = 0.01*i
+    #if back_data < BACK_MAX_POS:
+        #msg.data = back_data + 0.035
         print(msg.data)
         #time.sleep(0.001)
         pub.publish(msg)
@@ -124,16 +134,18 @@ def forward():
 
 
 def backwards():
-    pub = rospy.Publisher('/wheelchair/back_controller/command/', Float64, queue_size=5)
+    pub = rospy.Publisher('/wheelchair/back_controller/command/', Float64, queue_size=1)
     #rospy.init_node('py_go_up', anonymous=True)
     rate = rospy.Rate(BACK_SPEED)
 
-    #for i in range(int(z_pos_data*1000), -1, -1):
-    msg = Float64()
+    for i in range(int(back_data*100), int(100*BACK_MIN_POS), -1):
+        if cmd_back == "s_b":
+            break
+        msg = Float64()
     #msg.data = float(input("Data: "))
-    #msg.data = 0.001*i
-    if back_data > BACK_MIN_POS:
-        msg.data = back_data - 0.035
+        msg.data = 0.01*i
+    #if back_data > BACK_MIN_POS:
+        #msg.data = back_data - 0.035
         print(msg.data)
         pub.publish(msg)
         rate.sleep()
@@ -147,36 +159,50 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("/back_motor_pos")
 
 
+def on_disconnect(client, userdata,rc=0):
+    print("DisConnected result code "+str(rc))
+    client.loop_stop()
+
+
 def on_message(client, userdata, msg):
     #print(f"Message received [{msg.topic}]: {msg.payload}")
     #print(type(msg.payload))
     decoded_msg = str(msg.payload.decode("utf-8"))
-    global last_decoded_msg
-    if decoded_msg != last_decoded_msg:
-        print(decoded_msg)
-        last_decoded_msg = decoded_msg
+    global last_decoded_msg_top_down
+    global last_decoded_msg_back
+    
     if str(msg.topic) == "/up_down_motor_pos":
-        if decoded_msg == "up":
-            try:
-                go_up()
-            except rospy.ROSInterruptException:
-                pass
-        elif decoded_msg == "down":
-            try:
-                go_down()
-            except rospy.ROSInterruptException:
-                pass
+        global cmd_top_down 
+        cmd_top_down = decoded_msg
+        if decoded_msg != last_decoded_msg_top_down:
+            print(decoded_msg)
+        last_decoded_msg_top_down = decoded_msg
+    #     if decoded_msg == "up":
+    #         try:
+    #             go_up()
+    #         except rospy.ROSInterruptException:
+    #             pass
+    #     elif decoded_msg == "down":
+    #         try:
+    #             go_down()
+    #         except rospy.ROSInterruptException:
+    #             pass
     elif str(msg.topic) == "/back_motor_pos":
-        if decoded_msg == "forward":
-            try:
-                forward()
-            except rospy.ROSInterruptException:
-                pass
-        elif decoded_msg == "backwards":
-            try:
-                backwards()
-            except rospy.ROSInterruptException:
-                pass
+        global cmd_back 
+        cmd_back = decoded_msg
+        if decoded_msg != last_decoded_msg_back:
+            print(decoded_msg)
+        last_decoded_msg_back = decoded_msg
+    #     if decoded_msg == "forward":
+    #         try:
+    #             forward()
+    #         except rospy.ROSInterruptException:
+    #             pass
+    #     elif decoded_msg == "backwards":
+    #         try:
+    #             backwards()
+    #         except rospy.ROSInterruptException:
+    #             pass
     # else:
     #     try:
     #         stop()
@@ -187,6 +213,7 @@ def on_message(client, userdata, msg):
 if __name__ == '__main__':
 
     client = mqtt.Client("PC ROS GAZEBO")
+    client.loop_start()
     client.on_connect = on_connect
     client.on_message = on_message
 
@@ -196,8 +223,28 @@ if __name__ == '__main__':
         raise ValueError("Couldn't connect to MQTT broker.")
 
     subscribe_ros_topics()
-    
-    client.loop_forever()
+
+    while True:
+        if cmd_top_down == "u":
+            try:
+                go_up()
+            except rospy.ROSInterruptException:
+                pass
+        elif cmd_top_down == "d":
+            try:
+                go_down()
+            except rospy.ROSInterruptException:
+                pass
+        if cmd_back == "f":
+            try:
+                forward()
+            except rospy.ROSInterruptException:
+                pass
+        elif cmd_back == "b":
+            try:
+                backwards()
+            except rospy.ROSInterruptException:
+                pass
         
 
   
