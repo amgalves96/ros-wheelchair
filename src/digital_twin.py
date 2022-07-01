@@ -6,8 +6,15 @@ import rospy
 from std_msgs.msg import String
 from std_msgs.msg import Float64
 from control_msgs.msg import JointControllerState
+from geometry_msgs.msg import Twist
 import paho.mqtt.client as mqtt
 import time
+
+# Because of transformations
+import tf_conversions
+
+import tf2_ros
+import geometry_msgs.msg
 
 up_down_pos_data = 0.0
 up_down_process_value = 0.0
@@ -27,11 +34,14 @@ UP_DOWN_MIN_POS = 0
 BACK_SPEED = 100 # Hz
 UP_DOWN_SPEED = 40 # Hz
 #ev3_z_pos = 0
+
 last_decoded_msg_top_down = ''
 last_decoded_msg_back = ''
+last_decoded_msg_steer = ''
 
 cmd_top_down = ''
 cmd_back = ''
+cmd_steer = ''
 
 
 def callback_up_down_state(data):
@@ -68,6 +78,7 @@ def subscribe_ros_topics():
     rospy.Subscriber("/wheelchair/back_controller/state/", JointControllerState, callback_back_state)
     rospy.Subscriber("/wheelchair/z_position_upper_chassis_controller/command/", Float64, callback_up_down_data)
     rospy.Subscriber("/wheelchair/z_position_upper_chassis_controller/state", JointControllerState, callback_up_down_state)
+    #rospy.Subscriber("/wheelchair/diff_drive_controller/cmd_vel/", Twist, callback_up_down_data)
 
     # spin() simply keeps python from exiting until this node is stopped
     #rospy.spin()
@@ -151,12 +162,49 @@ def backwards():
         rate.sleep()
 
 
+def steer_front(pub, velocity_msg: Twist, right_wheel_speed, left_wheel_speed):
+    if right_wheel_speed == 0 and left_wheel_speed == 0:
+        speed = 0.3
+    else:
+        speed = 0.5
+    velocity_msg.linear.x = speed
+    pub.publish(velocity_msg)
+    
+
+def steer_back(pub, velocity_msg: Twist, right_wheel_speed, left_wheel_speed):
+    if right_wheel_speed == 0 and left_wheel_speed == 0:
+        speed = -0.3
+    else:
+        speed = -0.5
+    velocity_msg.linear.x = speed
+    pub.publish(velocity_msg)
+
+
+def steer_left(pub, velocity_msg: Twist, right_wheel_speed, left_wheel_speed):
+    if right_wheel_speed == 0 and left_wheel_speed == 0:
+        speed = -0.3
+    else:
+        speed = 3
+    velocity_msg.angular.z = speed
+    pub.publish(velocity_msg)
+
+
+def steer_right(pub, velocity_msg: Twist, right_wheel_speed, left_wheel_speed):
+    if right_wheel_speed == 0 and left_wheel_speed == 0:
+        speed = -0.3
+    else:
+        speed = -3
+    velocity_msg.angular.z = speed
+    pub.publish(velocity_msg)
+
+
 def on_connect(client, userdata, flags, rc):
     # This will be called once the client connects
     print(f"Connected with result code {rc}")
     # Subscribe here!
     client.subscribe("/up_down_motor_pos")
     client.subscribe("/back_motor_pos")
+    client.subscribe("/steering")
 
 
 def on_disconnect(client, userdata,rc=0):
@@ -170,6 +218,7 @@ def on_message(client, userdata, msg):
     decoded_msg = str(msg.payload.decode("utf-8"))
     global last_decoded_msg_top_down
     global last_decoded_msg_back
+    global last_decoded_msg_steer
     
     if str(msg.topic) == "/up_down_motor_pos":
         global cmd_top_down 
@@ -193,6 +242,14 @@ def on_message(client, userdata, msg):
         if decoded_msg != last_decoded_msg_back:
             print(decoded_msg)
         last_decoded_msg_back = decoded_msg
+
+    
+    elif str(msg.topic) == "/steering":
+        global cmd_steer
+        cmd_steer = decoded_msg
+        if decoded_msg != last_decoded_msg_steer:
+            print(decoded_msg)
+        last_decoded_msg_steer = decoded_msg
     #     if decoded_msg == "forward":
     #         try:
     #             forward()
@@ -224,27 +281,79 @@ if __name__ == '__main__':
 
     subscribe_ros_topics()
 
+    pub_drive = rospy.Publisher('/wheelchair/diff_drive_controller/cmd_vel/', Twist, queue_size=1)
+
+    vel_msg = Twist()
+    vel_msg.linear.x = 0
+    vel_msg.linear.y = 0
+    vel_msg.linear.z = 0
+    vel_msg.angular.x = 0
+    vel_msg.angular.y = 0
+    vel_msg.angular.z = 0
+
     while True:
-        if cmd_top_down == "u":
+        
+        if cmd_top_down == "up":
             try:
                 go_up()
             except rospy.ROSInterruptException:
                 pass
-        elif cmd_top_down == "d":
+        elif cmd_top_down == "down":
             try:
                 go_down()
             except rospy.ROSInterruptException:
                 pass
-        if cmd_back == "f":
+        if cmd_back == "forward":
             try:
                 forward()
             except rospy.ROSInterruptException:
                 pass
-        elif cmd_back == "b":
+        elif cmd_back == "back":
             try:
                 backwards()
             except rospy.ROSInterruptException:
                 pass
+        if cmd_steer[:11] == "steer_front":
+            right_wheel_speed = int(cmd_steer[11:cmd_steer.index('.')])
+            left_wheel_speed = int(cmd_steer[cmd_steer.index('.') + 1:len(cmd_steer) + 1])
+            print("Right Wheel Speed:", right_wheel_speed)
+            print("Left Wheel Speed:", left_wheel_speed)
+            try:
+                steer_front(pub_drive, vel_msg, right_wheel_speed, left_wheel_speed)
+            except rospy.ROSInterruptException:
+                pass
+        elif cmd_steer[:10] == "steer_back":
+            right_wheel_speed = int(cmd_steer[10:cmd_steer.index('.')])
+            left_wheel_speed = int(cmd_steer[cmd_steer.index('.') + 1:len(cmd_steer) + 1])
+            print("Right Wheel Speed:", right_wheel_speed)
+            print("Left Wheel Speed:", left_wheel_speed)
+            try:
+                steer_back(pub_drive, vel_msg, right_wheel_speed, left_wheel_speed)
+            except rospy.ROSInterruptException:
+                pass
+        elif cmd_steer[:10] == "steer_left":
+            right_wheel_speed = int(cmd_steer[10:cmd_steer.index('.')])
+            left_wheel_speed = int(cmd_steer[cmd_steer.index('.') + 1:len(cmd_steer) + 1])
+            print("Right Wheel Speed:", right_wheel_speed)
+            print("Left Wheel Speed:", left_wheel_speed)
+            try:
+                steer_left(pub_drive, vel_msg, right_wheel_speed, left_wheel_speed)
+            except rospy.ROSInterruptException:
+                pass
+        elif cmd_steer[:11] == "steer_right":
+            right_wheel_speed = int(cmd_steer[11:cmd_steer.index('.')])
+            left_wheel_speed = int(cmd_steer[cmd_steer.index('.') + 1:len(cmd_steer) + 1])
+            print("Right Wheel Speed:", right_wheel_speed)
+            print("Left Wheel Speed:", left_wheel_speed)
+            try:
+                steer_right(pub_drive, vel_msg, right_wheel_speed, left_wheel_speed)
+            except rospy.ROSInterruptException:
+                pass
+        else:
+            vel_msg.linear.x = 0
+            vel_msg.angular.z = 0
+            pub_drive.publish(vel_msg)
+
         
 
   
