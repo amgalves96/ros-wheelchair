@@ -4,7 +4,7 @@
 
 	<!--<xacro:include filename="$(find wheelchair)/urdf/wheelchair.gazebo" />-->
 
-	<!-- Measurement Values of CHair -->
+	<!-- Measurement Values -->
 	<xacro:property name="robot_name" value="wheelchair" />
 	<xacro:property name="chassis_mass" value="60"/>
 	<xacro:property name="upper_chassis_mass" value="20"/>
