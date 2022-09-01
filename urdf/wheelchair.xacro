@@ -2,9 +2,9 @@
 
 <robot name="wheelchair" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <!-- Motor, Camera and Lidar Simulation -->
 	<!--<xacro:include filename="$(find wheelchair)/urdf/wheelchair.gazebo" />-->
 
+	<!-- Measurement Values -->
 	<xacro:property name="robot_name" value="wheelchair" />
 	<xacro:property name="chassis_mass" value="60"/>
 	<xacro:property name="upper_chassis_mass" value="20"/>
@@ -37,7 +37,7 @@
 	<xacro:property name="y_back_joint" value="0.0"/>
 	<xacro:property name="z_back_joint" value="0.051"/>
 
-	<!-- Make Chassis of Bot -->
+	<!-- Wheelchair Chassis -->
 	<link name="chassis">
 
 		<pose>0 0 0.1 0 0 0</pose>
@@ -69,6 +69,7 @@
 
 	</link>
 
+	<!-- Wheelchair Upper Chassis Without Back -->
 	<link name="upper_chassis">
 
 		<inertial>
@@ -98,6 +99,7 @@
 
 	</link>
 
+	<!-- Wheelchair Back Support -->
 	<link name="back">
 
 		<inertial>
@@ -127,7 +129,7 @@
 
 	</link>
 
-	<!-- Left Wheel -->
+	<!-- Left Front Wheel -->
 	<link name="left_wheel">
 
 		<inertial>
@@ -156,7 +158,7 @@
 
 	</link>
 
-	<!-- Right Wheel -->
+	<!-- Right Front Wheel -->
 	<link name="right_wheel">
 
 		<inertial>
