@@ -3,6 +3,7 @@
 <robot name="wheelchair" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 	<!--<xacro:include filename="$(find wheelchair)/urdf/wheelchair.gazebo" />-->
+	
 
 	<!-- Measurement Values -->
 	<xacro:property name="robot_name" value="wheelchair" />
