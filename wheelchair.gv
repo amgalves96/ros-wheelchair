@@ -1,0 +1,32 @@
+digraph G {
+node [shape=box];
+"robot_footprint" [label="robot_footprint"];
+"chassis" [label="chassis"];
+"left_wheel" [label="left_wheel"];
+"left_wheel_support" [label="left_wheel_support"];
+"left_wheel_back" [label="left_wheel_back"];
+"right_wheel" [label="right_wheel"];
+"right_wheel_support" [label="right_wheel_support"];
+"right_wheel_back" [label="right_wheel_back"];
+"upper_chassis" [label="upper_chassis"];
+"back" [label="back"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"robot_footprint" -> "robot_footprint_joint" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"robot_footprint_joint" -> "chassis"
+"chassis" -> "left_wheel_front_joint" [label="xyz: 0.523 0.527 0.13 \nrpy: 0 -0 0"]
+"left_wheel_front_joint" -> "left_wheel"
+"chassis" -> "left_wheel_support_joint" [label="xyz: 0.083 0.527 0.125 \nrpy: 0 -0 0"]
+"left_wheel_support_joint" -> "left_wheel_support"
+"left_wheel_support" -> "rear_left_wheel_joint" [label="xyz: -0.023 0 -0.063 \nrpy: 0 -0 0"]
+"rear_left_wheel_joint" -> "left_wheel_back"
+"chassis" -> "right_wheel_front_joint" [label="xyz: 0.523 0.051 0.13 \nrpy: 0 -0 0"]
+"right_wheel_front_joint" -> "right_wheel"
+"chassis" -> "right_wheel_support_joint" [label="xyz: 0.083 0.051 0.125 \nrpy: 0 -0 0"]
+"right_wheel_support_joint" -> "right_wheel_support"
+"right_wheel_support" -> "rear_right_wheel_joint" [label="xyz: -0.023 0 -0.063 \nrpy: 0 -0 0"]
+"rear_right_wheel_joint" -> "right_wheel_back"
+"chassis" -> "upper_chassis_joint" [label="xyz: 0.42 0.29 0.38 \nrpy: 0 -0 0"]
+"upper_chassis_joint" -> "upper_chassis"
+"upper_chassis" -> "back_joint" [label="xyz: -0.25 0 0.051 \nrpy: 0 -0 0"]
+"back_joint" -> "back"
+}
