@@ -6,16 +6,16 @@
 
 	<!-- Measurement Values -->
 	<xacro:property name="robot_name" value="wheelchair" />
-	<xacro:property name="chassis_mass" value="60"/>
-	<xacro:property name="upper_chassis_mass" value="20"/>
-	<xacro:property name="back_mass" value="5"/>
-	<xacro:property name="middle_wheel_mass" value="15"/>
+	<xacro:property name="chassis_mass" value="60.0"/>
+	<xacro:property name="upper_chassis_mass" value="20.0"/>
+	<xacro:property name="back_mass" value="5.0"/>
+	<xacro:property name="middle_wheel_mass" value="15.0"/>
 	<xacro:property name="middle_wheel_radius" value="0.128"/>
 	<xacro:property name="middle_wheel_length" value="0.05"/>
 	<xacro:property name="rear_wheel_radius" value="0.060"/>
 	<xacro:property name="rear_wheel_length" value="0.025"/>
-	<xacro:property name="rear_wheel_mass" value="3"/>
-	<xacro:property name="rear_wheel_support_mass" value="2"/>
+	<xacro:property name="rear_wheel_mass" value="3.0"/>
+	<xacro:property name="rear_wheel_support_mass" value="2.0"/>
 
 	<!-- Axis Values-->
 	<xacro:property name="z_wheel_support" value="0.125"/>

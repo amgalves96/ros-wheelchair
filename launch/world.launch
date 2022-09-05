@@ -22,10 +22,11 @@
     <arg name="gui" value="true" />
     <arg name="world_name" value="$(arg world_file)"/>
   </include>
+
   <!-- Find my robot Description-->
   <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find wheelchair)/urdf/wheelchair.xacro'"/>
 
-  <!-- Spawn My Robot -->
+  <!-- Spawn Wheelchair -->
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" 
         args="-urdf -param robot_description -model wheelchair 
               -x $(arg x) -y $(arg y) -z $(arg z)
@@ -35,10 +36,9 @@
   <node name="rviz" pkg="rviz" type="rviz" respawn="false"
         args="-d $(find wheelchair)/default.rviz"/>
   
+  <!-- Load joint controller configurations from YAML file to parameter server -->
   <rosparam file="$(find wheelchair)/config/joint_states.yaml" command="load"/>
-
   <rosparam file="$(find wheelchair)/config/diff_drive.yaml" command="load"/>
-
   <rosparam file="$(find wheelchair)/config/effort.yaml" command="load"/>
 
   <!-- load the controllers -->
@@ -50,10 +50,15 @@
          /wheelchair/back_controller
         --shutdown-timeout 3"/>
 
+  <!-- Send wheelchair states to tf -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen"/>
+
+  <!-- Plugin for driving the wheelchair -->
   <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
     <param name="default_topic" value="/wheelchair/diff_drive_controller/cmd_vel"/> 
   </node>
 
+  <!-- Plugin GUI -->
   <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui">
   </node>
 
