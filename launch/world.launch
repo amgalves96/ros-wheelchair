@@ -32,9 +32,9 @@
               -x $(arg x) -y $(arg y) -z $(arg z)
               -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)"/>
   
-  <!--launch rviz-->
+  <!--launch rviz
   <node name="rviz" pkg="rviz" type="rviz" respawn="false"
-        args="-d $(find wheelchair)/default.rviz"/>
+        args="-d $(find wheelchair)/default.rviz"/>-->
   
   <!-- Load joint controller configurations from YAML file to parameter server -->
   <rosparam file="$(find wheelchair)/config/joint_states.yaml" command="load"/>
@@ -51,7 +51,7 @@
         --shutdown-timeout 3"/>
 
   <!-- Send wheelchair states to tf -->
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen"/>
+  <!--<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen"/>-->
 
   <!-- Plugin for driving the wheelchair -->
   <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">

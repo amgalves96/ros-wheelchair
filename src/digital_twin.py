@@ -216,7 +216,7 @@ def on_message(client, userdata, msg):
 if __name__ == '__main__':
 
     # Connect to MQTT broker
-    client = mqtt.Client("PC ROS GAZEBO")
+    client = mqtt.Client("PC ROS")
     client.loop_start()
     client.on_connect = on_connect
     client.on_message = on_message
