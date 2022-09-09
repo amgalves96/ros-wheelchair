@@ -22,5 +22,5 @@ roslaunch wheelchair world.launch
 ```
 Open new terminal:
 ```
-rosrun wheelchair subscriber.py
+rosrun wheelchair digital_twin.py
 ```
